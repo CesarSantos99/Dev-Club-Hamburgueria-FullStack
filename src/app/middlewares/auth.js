@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import authConfig from '../../config/auth'
 
 export default (request, response, next) => {
   const authToker = request.headers.authorization
@@ -9,7 +10,17 @@ export default (request, response, next) => {
 
   const token = authToker.split(' ')[1]
 
-  console.log(token)
+  try {
+    jwt.verify(token, authConfig.secret, function (err, decoded) {
+      if (err) {
+        throw new Error()
+      }
 
-  return next()
+      request.userId = decoded.id
+
+      return next()
+    })
+  } catch (err) {
+    return response.status(401).json({ error: 'Token is invalid' })
+  }
 }
