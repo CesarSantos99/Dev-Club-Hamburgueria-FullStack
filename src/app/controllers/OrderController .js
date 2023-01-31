@@ -72,6 +72,15 @@ class OrderController {
 
     return response.json(orders)
   }
+
+  async update(request, response) {
+    const { id } = request.params
+    const { status } = request.body
+
+    await Order.updateOne({ _id: id }, { status })
+
+    return response.json({ message: 'Status was updated' })
+  }
 }
 
 export default new OrderController()
