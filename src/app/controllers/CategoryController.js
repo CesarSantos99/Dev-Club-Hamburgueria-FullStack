@@ -22,6 +22,8 @@ class CategoryController {
 
     const { name } = request.body
 
+    const { filename: path } = request.file
+
     const categoryExists = await Category.findOne({
       where: {
         name,
@@ -32,7 +34,7 @@ class CategoryController {
       return response.status(400).json({ error: 'Category already exists' })
     }
 
-    const { id } = await Category.create({ name })
+    const { id } = await Category.create({ name, path })
 
     return response.json({ name, id })
   }
